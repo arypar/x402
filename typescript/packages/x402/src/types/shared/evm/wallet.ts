@@ -10,7 +10,7 @@ import type {
   PublicClient,
   LocalAccount,
 } from "viem";
-import { baseSepolia, avalancheFuji } from "viem/chains";
+import { baseSepolia, avalancheFuji, sepolia } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 import { Hex } from "viem";
 
@@ -62,6 +62,18 @@ export function createClientAvalancheFuji(): ConnectedClient<
 }
 
 /**
+ * Creates a public client configured for the Ethereum Sepolia testnet
+ *
+ * @returns A public client instance connected to Ethereum Sepolia
+ */
+export function createClientEthereumSepolia(): ConnectedClient<Transport, typeof sepolia, undefined> {
+  return createPublicClient({
+    chain: sepolia,
+    transport: http(),
+  }).extend(publicActions);
+}
+
+/**
  * Creates a wallet client configured for the Base Sepolia testnet with a private key
  *
  * @param privateKey - The private key to use for signing transactions
@@ -84,6 +96,20 @@ export function createSignerSepolia(privateKey: Hex): SignerWallet<typeof baseSe
 export function createSignerAvalancheFuji(privateKey: Hex): SignerWallet<typeof avalancheFuji> {
   return createWalletClient({
     chain: avalancheFuji,
+    transport: http(),
+    account: privateKeyToAccount(privateKey),
+  }).extend(publicActions);
+}
+
+/**
+ * Creates a wallet client configured for the Ethereum Sepolia testnet with a private key
+ *
+ * @param privateKey - The private key to use for signing transactions
+ * @returns A wallet client instance connected to Ethereum Sepolia with the provided private key
+ */
+export function createSignerEthereumSepolia(privateKey: Hex): SignerWallet<typeof sepolia> {
+  return createWalletClient({
+    chain: sepolia,
     transport: http(),
     account: privateKeyToAccount(privateKey),
   }).extend(publicActions);
